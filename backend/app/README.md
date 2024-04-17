@@ -41,12 +41,12 @@ The installed dependencies should come with uvicorn, an ASGI web server. You can
 uvicorn main:app
 ```
 
-By default the port is 8000, but you can change the port by setting the `UVICORN_PORT` environment variable before starting the server.
+By default the port is 8000, but you can change the port by adding the `--port` flag.
 
 Example:
 
 ```bash
-set UVICORN_PORT=9090
+uvicorn main:app --port 9090
 ```
 
 To stop the server, just hit `CTRL+C`.
