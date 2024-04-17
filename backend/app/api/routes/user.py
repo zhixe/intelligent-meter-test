@@ -21,7 +21,7 @@ async def get_user_details(user_id: str) -> UserDetailsResponse:
         return user
 
 @router.post('/create')
-async def create_user(user: UserCreateRequest) -> GenericResponse:
+async def create_user(user: UserCreateRequest, return_userid: bool = False) -> GenericResponse:
 
     with Session(engine) as session:
 
@@ -43,10 +43,15 @@ async def create_user(user: UserCreateRequest) -> GenericResponse:
 
         session.commit()
 
-        return GenericResponse(
-            status='OK',
-            details={'user_id': user_id}
-        )
+        if return_userid:
+            return GenericResponse(
+                status='OK',
+                details={'user_id': user_id}
+            )
+        else:
+            return GenericResponse(
+                status='OK'
+            )
         
 
 
