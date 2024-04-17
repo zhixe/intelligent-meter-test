@@ -37,7 +37,7 @@ The requirements for the project can be found in the `requirements.txt` file.
 
 The installed dependencies should come with uvicorn, an ASGI web server. You can use this to simply start the server.
 
-> uvicorn main:app
+```uvicorn main:app```
 
 By default the port is 8000, but you can change the port by setting the `UVICORN_PORT` environment variable before starting the server.
 
