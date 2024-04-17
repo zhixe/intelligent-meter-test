@@ -12,6 +12,8 @@ class Users(SQLModel, table=True):
     address: str
     email: str
 
+### Generic schemas
+
 ### Request schemas
 
 class UserCreateRequest(SQLModel):
@@ -22,6 +24,14 @@ class UserCreateRequest(SQLModel):
     age: int
     address: str
     email: str
+
+class UserUpdateRequest(SQLModel):
+    username: str | None = None
+    full_name: str | None = None
+    name: str | None = None
+    age: int | None = None
+    address: str | None = None
+    email: str | None = None
 
 
 ### Response schemas
@@ -42,3 +52,6 @@ class UserDetailsResponse(SQLModel):
 class UserCreateResponse(SQLModel):
     status: str
     user_details: UserDetailsResponse
+
+class UserUpdateResponse(SQLModel):
+    status: str

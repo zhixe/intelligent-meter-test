@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 
 from core.main import engine
 from utils import hash_password
-from models import Users, UserCreateRequest, UserDetailsResponse, UserCreateResponse
+from models import Users, UserCreateRequest, UserDetailsResponse, UserCreateResponse, UserUpdateRequest, UserUpdateResponse
 
 router = APIRouter()
 
@@ -43,8 +43,30 @@ async def create_user(user: UserCreateRequest) -> UserCreateResponse:
 
         session.commit()
 
-        return UserCreateResponse(
-            status='OK',
-            user_details=user_details
-            )
+    return UserCreateResponse(
+        status='OK',
+        user_details=user_details
+    )
         
+
+
+@router.put('/update')
+async def update_user(user_id: int, user: UserUpdateRequest, force_nulls: bool = False) -> UserUpdateResponse:
+
+    with Session(engine) as session:
+
+        statement = select(Users).where(Users.user_id == user_id)
+        results = session.exec(statement)
+
+        old_user = results.first()
+
+        for attr in user.model_fields:
+            if not force_nulls:
+                if getattr(user, attr) is not None and getattr(old_user, attr) != getattr(user, attr):
+                    setattr(old_user, attr, getattr(user, attr))
+            else:
+                setattr(old_user, attr, getattr(user, attr))
+
+        session.commit()
+
+    return UserUpdateResponse(status='OK')
