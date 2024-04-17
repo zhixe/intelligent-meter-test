@@ -9,7 +9,9 @@ router = APIRouter()
 
 @router.get('/details')
 async def get_user_details(user_id: str) -> UserDetailsResponse:
-
+    """
+    Get details of a user based on the provided user ID.
+    """
     with Session(engine) as session:
 
         statement = select(Users).where(Users.user_id == user_id)
@@ -22,7 +24,9 @@ async def get_user_details(user_id: str) -> UserDetailsResponse:
 
 @router.post('/create')
 async def create_user(user: UserCreateRequest, return_userid: bool = False) -> GenericResponse:
-
+    """
+    Creates a new user.
+    """
     with Session(engine) as session:
 
         new_user = Users(
@@ -57,7 +61,9 @@ async def create_user(user: UserCreateRequest, return_userid: bool = False) -> G
 
 @router.put('/update')
 async def update_user(user_id: int, user: UserUpdateRequest, force_nulls: bool = False) -> GenericResponse:
-
+    """
+    Update user details based on the provided user ID with optional force_nulls flag.
+    """
     with Session(engine) as session:
 
         statement = select(Users).where(Users.user_id == user_id)
