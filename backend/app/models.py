@@ -48,10 +48,3 @@ class UserDetailsResponse(SQLModel):
     age: int
     address: str
     email: str
-
-class UserCreateResponse(SQLModel):
-    status: str
-    user_details: UserDetailsResponse
-
-class UserUpdateResponse(SQLModel):
-    status: str
