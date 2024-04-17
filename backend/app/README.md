@@ -37,13 +37,17 @@ The requirements for the project can be found in the `requirements.txt` file.
 
 The installed dependencies should come with uvicorn, an ASGI web server. You can use this to simply start the server.
 
-```uvicorn main:app```
+```bash
+uvicorn main:app
+```
 
 By default the port is 8000, but you can change the port by setting the `UVICORN_PORT` environment variable before starting the server.
 
 Example:
 
-> set UVICORN_PORT=9090
+```bash
+set UVICORN_PORT=9090
+```
 
 To stop the server, just hit `CTRL+C`.
 
