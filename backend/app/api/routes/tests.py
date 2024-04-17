@@ -2,12 +2,12 @@ from fastapi import APIRouter
 from sqlmodel import Session, select
 
 from core.main import engine
-from models import StatusResponse
+from models import GenericResponse
 
 router = APIRouter()
 
 @router.get("/connection")
-async def test_connection() -> StatusResponse:
+async def test_connection() -> GenericResponse:
 
     status = None
 
@@ -23,4 +23,7 @@ async def test_connection() -> StatusResponse:
         status = 'ERROR'
         message = str(e)
 
-    return StatusResponse(status=status, message=message)
+    return GenericResponse(
+        status=status, 
+        details={'message': message}
+    )

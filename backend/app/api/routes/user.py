@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 
 from core.main import engine
 from utils import hash_password
-from models import Users, UserCreateRequest, UserDetailsResponse, UserCreateResponse, UserUpdateRequest, UserUpdateResponse
+from models import Users, UserCreateRequest, UserDetailsResponse, UserUpdateRequest, GenericResponse
 
 router = APIRouter()
 
@@ -21,7 +21,7 @@ async def get_user_details(user_id: str) -> UserDetailsResponse:
         return user
 
 @router.post('/create')
-async def create_user(user: UserCreateRequest) -> UserCreateResponse:
+async def create_user(user: UserCreateRequest) -> GenericResponse:
 
     with Session(engine) as session:
 
@@ -39,19 +39,19 @@ async def create_user(user: UserCreateRequest) -> UserCreateResponse:
         session.flush()
         session.refresh(new_user)
 
-        user_details = UserDetailsResponse(**new_user.model_dump())
+        user_id = new_user.user_id
 
         session.commit()
 
-    return UserCreateResponse(
-        status='OK',
-        user_details=user_details
-    )
+        return GenericResponse(
+            status='OK',
+            details={'user_id': user_id}
+        )
         
 
 
 @router.put('/update')
-async def update_user(user_id: int, user: UserUpdateRequest, force_nulls: bool = False) -> UserUpdateResponse:
+async def update_user(user_id: int, user: UserUpdateRequest, force_nulls: bool = False) -> GenericResponse:
 
     with Session(engine) as session:
 
@@ -69,4 +69,4 @@ async def update_user(user_id: int, user: UserUpdateRequest, force_nulls: bool =
 
         session.commit()
 
-    return UserUpdateResponse(status='OK')
+        return GenericResponse(status='OK')

@@ -36,9 +36,9 @@ class UserUpdateRequest(SQLModel):
 
 ### Response schemas
 
-class StatusResponse(SQLModel):
+class GenericResponse(SQLModel):
     status: str
-    message: str
+    details: dict = {}
 
 class UserDetailsResponse(SQLModel):
     user_id: int
