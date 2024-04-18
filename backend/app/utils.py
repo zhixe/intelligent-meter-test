@@ -1,11 +1,18 @@
 import yaml
 import hashlib
 
-CONFIG_FILENAME = 'config.yaml'
+CONFIG = 'config.yaml'
+
+def load_yaml(path: str):
+
+    with open(path, 'r') as f:
+        config = yaml.safe_load(f)
+
+    return config
 
 def load_config():
 
-    with open(CONFIG_FILENAME, 'r') as f:
+    with open(CONFIG, 'r') as f:
         config = yaml.safe_load(f)
 
     return config

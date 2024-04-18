@@ -14,6 +14,10 @@ class Users(SQLModel, table=True):
 
 ### Generic schemas
 
+class Token(SQLModel):
+    access_token: str
+    token_type: str
+
 ### Request schemas
 
 class UserCreateRequest(SQLModel):
