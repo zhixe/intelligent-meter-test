@@ -13,7 +13,7 @@ router = APIRouter()
 
 ### Login using Oauth2
 
-@router.post('/login')
+@router.post('')
 async def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
     with Session(engine) as session:
         statement = select(Users).where(Users.username == form_data.username)
