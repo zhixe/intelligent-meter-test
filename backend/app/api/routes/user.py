@@ -1,11 +1,33 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordBearer
+
 from sqlmodel import Session, select
 
 from core.main import engine
+from core.security import decode_access_token
+
 from utils import hash_password
 from models import Users, UserCreateRequest, UserDetailsResponse, UserUpdateRequest, GenericResponse
 
 router = APIRouter()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+
+@router.get('/me')
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+
+    object = decode_access_token(token)
+
+    user_id = object['sub']
+
+    with Session(engine) as session:
+
+        statement = select(Users).where(Users.user_id == user_id)
+        results = session.exec(statement)
+
+        user = results.first()
+        user = UserDetailsResponse(**user.model_dump())
+
+        return user
 
 @router.get('/details')
 async def get_user_details(user_id: str) -> UserDetailsResponse:

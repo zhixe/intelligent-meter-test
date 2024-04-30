@@ -1,4 +1,5 @@
 from sqlmodel import Field, SQLModel
+from pydantic import BaseModel
 
 ### Database tables
 
@@ -14,7 +15,7 @@ class Users(SQLModel, table=True):
 
 ### Generic schemas
 
-class Token(SQLModel):
+class Token(BaseModel):
     access_token: str
     token_type: str
 
@@ -43,6 +44,11 @@ class UserUpdateRequest(SQLModel):
 class GenericResponse(SQLModel):
     status: str
     details: dict = {}
+
+class ListResponse(SQLModel):
+    status: str
+    details: list
+    metadata: dict = {} 
 
 class UserDetailsResponse(SQLModel):
     user_id: int

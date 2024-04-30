@@ -28,6 +28,6 @@ async def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Dep
             raise HTTPException(status_code=400, detail='Incorrect username or password')
 
         return Token(
-            access_token=create_access_token(user.username),
+            access_token=create_access_token(user.user_id),
             token_type='bearer'
         )
