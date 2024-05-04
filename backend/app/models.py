@@ -44,7 +44,7 @@ class Meters(SQLModel, table=True):
     meter_serial: str | None = Field(default=None, primary_key=True)
     manufacturer: str
     store_region: str
-    size: str
+    size: int
     type: str
     model: str
 
