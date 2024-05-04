@@ -40,6 +40,14 @@ class Customers(SQLModel, table=True):
     phone_no: str
     age: int
 
+class Meters(SQLModel, table=True):
+    meter_serial: str | None = Field(default=None, primary_key=True)
+    manufacturer: str
+    store_region: str
+    size: str
+    type: str
+    model: str
+
 ### Generic schemas
 
 class Token(BaseModel):
