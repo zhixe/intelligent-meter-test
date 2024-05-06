@@ -1,0 +1,6 @@
+fastapi==0.111.0
+pydantic==2.7.1
+PyJWT==2.8.0
+PyYAML==6.0.1
+sqlmodel==0.0.18
+typing_extensions==4.11.0
