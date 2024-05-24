@@ -18,16 +18,6 @@ class Login_credentials(SQLModel, table=True):
     login_attempt: int
     last_login: int
 
-class Users(SQLModel, table=True):
-    user_id: int | None = Field(default=None, primary_key=True)
-    username: str
-    password: str
-    full_name: str
-    name: str
-    age: int
-    address: str
-    email: str
-
 class Employees(SQLModel, table=True):
     employee_id: int | None = Field(default=None, primary_key=True)
     username: str
@@ -66,15 +56,6 @@ class Token(BaseModel):
     token_type: str
 
 ### Request schemas
-
-class UserCreateRequest(SQLModel):
-    username: str
-    password: str
-    full_name: str
-    name: str
-    age: int
-    address: str
-    email: str
 
 class RegisterCustomerForm:
 
