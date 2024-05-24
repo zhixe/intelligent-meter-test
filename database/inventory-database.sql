@@ -21,8 +21,8 @@ CREATE TABLE "Employees" (
         REFERENCES "Login_credentials"("username")
 );
 
-CREATE TABLE "Meters" (
-    "meter_serial" VARCHAR(20),
+CREATE TABLE "meters" (
+    "meter_serial" TEXT,
     "meter_manufacturer" VARCHAR(50) NOT NULL,
     "store_region" VARCHAR(50) NOT NULL,
     "meter_size" SMALLINT,
