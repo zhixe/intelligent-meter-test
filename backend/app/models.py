@@ -11,13 +11,6 @@ def current_timestamp():
     return datetime.now(timezone.utc).timestamp()
 
 ### Database tables
-
-class Login_credentials(SQLModel, table=True):
-    username: str = Field(primary_key=True)
-    password: str
-    login_attempt: int
-    last_login: int
-
 class Employees(SQLModel, table=True):
     employee_id: int | None = Field(default=None, primary_key=True)
     username: str
