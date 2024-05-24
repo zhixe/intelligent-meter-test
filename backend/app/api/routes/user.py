@@ -7,7 +7,7 @@ from core.main import engine
 from core.security import decode_access_token
 
 from utils import hash_password
-from models import EmployeeDetailsResponse, CustomerDetailsResponse, Customers, Employees, Users, UserCreateRequest, UserDetailsResponse, UserUpdateRequest, GenericResponse
+from models import EmployeeDetailsResponse, CustomerDetailsResponse, Customers, Employees
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")

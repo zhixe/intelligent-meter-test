@@ -7,7 +7,7 @@ from sqlmodel import Session, select
 from core.main import engine
 from core.security import create_access_token
 from utils import hash_password
-from models import Users, Token, Employees, Customers
+from models import Token, Employees, Customers
 
 router = APIRouter()
 

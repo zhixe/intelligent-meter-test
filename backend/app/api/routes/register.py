@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Form, Depends
 
 from core.main import engine
-from models import Customers, RegisterCustomerForm, Login_credentials
+from models import Customers, RegisterCustomerForm
 
 from sqlmodel import Session
 
