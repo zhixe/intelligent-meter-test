@@ -21,18 +21,29 @@ class Login_credentials(SQLModel, table=True):
 class Users(SQLModel, table=True):
     user_id: int | None = Field(default=None, primary_key=True)
     username: str
-    sha256_password: str
+    password: str
     full_name: str
     name: str
     age: int
     address: str
     email: str
 
+class Employees(SQLModel, table=True):
+    employee_id: int | None = Field(default=None, primary_key=True)
+    username: str
+    password: str
+    email: str
+    first_name: str
+    last_name: str
+    department: str
+    position: str
+    employment_type: str
+
 class Customers(SQLModel, table=True):
     customer_id: str | None = Field(default=None, primary_key=True)
-    meter_serial: str | None
-    username: str = Field(foreign_key="login_credentials.username")
-    customer_email: str
+    username: str
+    password: str
+    email: str
     first_name: str
     last_name: str
     address: str
@@ -78,7 +89,7 @@ class RegisterCustomerForm:
             ic_no: Annotated[str, Form()],
             phone_no: Annotated[str, Form()],
             age: Annotated[int, Form()]
-            ):
+    ):
         self.username = username
         self.password = password
         self.customer_email = customer_email
@@ -100,6 +111,27 @@ class UserUpdateRequest(SQLModel):
 
 
 ### Response schemas
+
+class EmployeeDetailsResponse(SQLModel):
+    employee_id: str
+    username: str
+    email: str
+    first_name: str
+    last_name: str
+    department: str
+    position: str
+    employment_type: str
+
+class CustomerDetailsResponse(SQLModel):
+    customer_id: str
+    username: str
+    email: str
+    first_name: str
+    last_name: str
+    address: str
+    ic_no: str
+    phone_no: str
+    age: int
 
 class GenericResponse(SQLModel):
     status: str

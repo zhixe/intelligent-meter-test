@@ -7,7 +7,7 @@ from sqlmodel import Session, select
 from core.main import engine
 from core.security import create_access_token
 from utils import hash_password
-from models import Users, Token
+from models import Users, Token, Employees, Customers
 
 router = APIRouter()
 
@@ -15,19 +15,36 @@ router = APIRouter()
 
 @router.post('')
 async def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
+    
+    auth_tables = [Employees, Customers]
+    user_class = None
+    
     with Session(engine) as session:
-        statement = select(Users).where(Users.username == form_data.username)
-        results = session.exec(statement)
 
-        user = results.first()
+        for table in auth_tables:
 
-        if not user:
-            raise HTTPException(status_code=400, detail='Incorrect username or password')
+            statement = select(table).where(table.username == form_data.username)
+            results = session.exec(statement)
+            user = results.first()
 
-        elif user.sha256_password != hash_password(form_data.password):
-            raise HTTPException(status_code=400, detail='Incorrect username or password')
+            if not user:
+                continue
 
-        return Token(
-            access_token=create_access_token(user.user_id),
-            token_type='bearer'
-        )
+            elif user.password != hash_password(form_data.password):
+                continue
+            else:
+                print(f'\n\nFound user {table}\n\n')
+                user_class = table
+                break
+        
+        if user_class is not None:
+            if user_class == Customers:
+                return Token(
+                    access_token=create_access_token(user.customer_id),
+                    token_type='bearer'
+                )
+            elif user_class == Employees:
+                return Token(
+                    access_token=create_access_token(user.employee_id),
+                    token_type='bearer'
+                )
