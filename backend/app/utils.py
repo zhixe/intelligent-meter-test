@@ -1,7 +1,7 @@
 import yaml
 import random
 import hashlib
-from models import Customers
+from models import Customers, Employees, Meters
 # from core.main import engine
 from sqlmodel import Session, select
 
@@ -35,15 +35,23 @@ def generate_id(engine, id_type: str):
             'table': Customers,
             'column': 'customer_id'
         },
-        'employee': 'EMPL',
-        'meter': 'METR',
-        'tracking': 'TRKG'
+        'employee':{
+            'prefix': 'EMPL',
+            'table': Employees,
+            'column': 'employee_id'
+        },
+        'meter': {
+            'prefix': 'METR',
+            'table': Meters,
+            'column': 'meter_serial'
+        },
+        # 'tracking': 'TRKG'
     }
 
-    _type = mapping[id_type]
+    type_ = mapping[id_type]
 
     statement = select(
-        getattr(_type['table'], _type['column'])
+        getattr(type_['table'], type_['column'])
     )
 
     with Session(engine) as session:
@@ -51,7 +59,7 @@ def generate_id(engine, id_type: str):
 
     while True:
 
-        _id = _type['prefix'] + '%07d' % random.randint(0, 9999999)
+        _id = type_['prefix'] + '%07d' % random.randint(0, 9999999)
 
         if _id not in results:
             return _id
