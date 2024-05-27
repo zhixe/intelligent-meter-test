@@ -6,7 +6,7 @@ from models import GenericResponse
 
 router = APIRouter()
 
-@router.get("/connection")
+@router.get("/db/health_check")
 async def test_connection() -> GenericResponse:
 
     status = None

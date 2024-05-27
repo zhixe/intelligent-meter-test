@@ -1,14 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Form, Depends
+from fastapi import APIRouter, Depends
 
 from core.main import engine
-from models import Customers, RegisterCustomerForm
+from models import Employees, Customers, RegisterCustomerForm, RegisterEmployeeForm, StatusResponse
 
 from sqlmodel import Session
 
 from utils import hash_password, generate_id
-from uuid import uuid4
 
 
 
@@ -37,9 +36,28 @@ async def register_customer(
         session.add(new_customer)
         session.commit()
 
-        return
+        return StatusResponse(success=True)
+    
 
-@router.post('/test')
-async def test(form_data: Annotated[RegisterCustomerForm, Depends()]):
+@router.post('/employee')
+async def register_employee(
+    form_data: Annotated[RegisterEmployeeForm, Depends()]
+):
+    with Session(engine) as session:
 
-    return form_data
+        new_customer = Employees(
+            employee_id=generate_id(engine, 'employee'),
+            username=form_data.username,
+            password=hash_password(form_data.password),
+            email=form_data.email,
+            first_name=form_data.first_name,
+            last_name=form_data.last_name,
+            department=form_data.department,
+            position=form_data.position,
+            employment_type=form_data.employment_type
+        )
+        
+        session.add(new_customer)
+        session.commit()
+
+        return StatusResponse(success=True)

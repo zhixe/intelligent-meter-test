@@ -59,7 +59,7 @@ def generate_id(engine, id_type: str):
 
     while True:
 
-        _id = type_['prefix'] + '%07d' % random.randint(0, 9999999)
+        id_ = type_['prefix'] + '%07d' % random.randint(0, 9999999)
 
-        if _id not in results:
-            return _id
+        if id_ not in results:
+            return id_

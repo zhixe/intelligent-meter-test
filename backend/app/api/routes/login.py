@@ -33,7 +33,6 @@ async def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Dep
             elif user.password != hash_password(form_data.password):
                 continue
             else:
-                print(f'\n\nFound user {table}\n\n')
                 user_class = table
                 break
         

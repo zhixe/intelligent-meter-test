@@ -45,7 +45,7 @@ async def get_all_meters(offset: int = 0, limit: int = 10):
         )
 
 
-@router.put('/create')
+@router.put('/insert')
 async def create_meter(meter: Meters):
     
     with Session(engine) as session:
