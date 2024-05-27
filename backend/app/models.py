@@ -10,6 +10,9 @@ from datetime import datetime, timezone
 def current_timestamp():
     return datetime.now(timezone.utc).timestamp()
 
+def current_datetime():
+    return datetime.now(timezone.utc)
+
 ### Database tables
 class Employees(SQLModel, table=True):
     employee_id: int | None = Field(default=None, primary_key=True)
@@ -74,6 +77,28 @@ class RegisterCustomerForm:
         self.phone_no = phone_no
         self.age = age
 
+class RegisterEmployeeForm:
+
+    def __init__(
+            self, 
+            username: Annotated[str, Form()],
+            password: Annotated[str, Form()],
+            email: Annotated[str, Form()],
+            first_name: Annotated[str, Form()],
+            last_name: Annotated[str, Form()],
+            department: Annotated[str, Form()],
+            position: Annotated[str, Form()],
+            employment_type: Annotated[str, Form()]
+    ):
+        self.username = username
+        self.password = password
+        self.email = email
+        self.first_name = first_name
+        self.last_name = last_name
+        self.department = department
+        self.position = position
+        self.employment_type = employment_type
+
 ### Response schemas
 
 class EmployeeDetailsResponse(SQLModel):
@@ -105,4 +130,9 @@ class ListResponse(SQLModel):
     status: str
     details: list
     metadata: dict = {} 
+
+class StatusResponse(SQLModel):
+    success: bool
+    timestamp: float = Field(default_factory=current_datetime)
+    details: dict = {}
 
