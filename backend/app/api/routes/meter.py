@@ -29,8 +29,8 @@ async def get_meter(meter_serial: str):
 @router.get('/all')
 async def get_all_meters(offset: int = 0, limit: int = 10):
 
-    if limit > 100:
-        limit = 100
+    if limit > 1000:
+        limit = 1000
 
     with Session(engine) as session:
 
@@ -45,3 +45,14 @@ async def get_all_meters(offset: int = 0, limit: int = 10):
         )
 
 
+@router.put('/create')
+async def create_meter(meter: Meters):
+    
+    with Session(engine) as session:
+
+        new_meter = Meters(**meter.model_dump())
+
+        session.add(new_meter)
+        session.commit()
+
+        return new_meter
