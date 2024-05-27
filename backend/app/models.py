@@ -11,34 +11,36 @@ def current_timestamp():
     return datetime.now(timezone.utc).timestamp()
 
 ### Database tables
-
-class Login_credentials(SQLModel, table=True):
-    username: str = Field(primary_key=True)
-    password: str
-    login_attempt: int
-    last_login: int
-
-class Users(SQLModel, table=True):
-    user_id: int | None = Field(default=None, primary_key=True)
+class Employees(SQLModel, table=True):
+    employee_id: int | None = Field(default=None, primary_key=True)
     username: str
-    sha256_password: str
-    full_name: str
-    name: str
-    age: int
-    address: str
+    password: str
     email: str
+    first_name: str
+    last_name: str
+    department: str
+    position: str
+    employment_type: str
 
 class Customers(SQLModel, table=True):
     customer_id: str | None = Field(default=None, primary_key=True)
-    meter_serial: str | None
-    username: str = Field(foreign_key="login_credentials.username")
-    customer_email: str
+    username: str
+    password: str
+    email: str
     first_name: str
     last_name: str
     address: str
     ic_no: str
     phone_no: str
     age: int
+
+class Meters(SQLModel, table=True):
+    meter_serial: str | None = Field(default=None, primary_key=True)
+    manufacturer: str
+    store_region: str
+    size: int
+    type: str
+    model: str
 
 ### Generic schemas
 
@@ -47,15 +49,6 @@ class Token(BaseModel):
     token_type: str
 
 ### Request schemas
-
-class UserCreateRequest(SQLModel):
-    username: str
-    password: str
-    full_name: str
-    name: str
-    age: int
-    address: str
-    email: str
 
 class RegisterCustomerForm:
 
@@ -70,7 +63,7 @@ class RegisterCustomerForm:
             ic_no: Annotated[str, Form()],
             phone_no: Annotated[str, Form()],
             age: Annotated[int, Form()]
-            ):
+    ):
         self.username = username
         self.password = password
         self.customer_email = customer_email
@@ -81,17 +74,28 @@ class RegisterCustomerForm:
         self.phone_no = phone_no
         self.age = age
 
-
-class UserUpdateRequest(SQLModel):
-    username: str | None = None
-    full_name: str | None = None
-    name: str | None = None
-    age: int | None = None
-    address: str | None = None
-    email: str | None = None
-
-
 ### Response schemas
+
+class EmployeeDetailsResponse(SQLModel):
+    employee_id: str
+    username: str
+    email: str
+    first_name: str
+    last_name: str
+    department: str
+    position: str
+    employment_type: str
+
+class CustomerDetailsResponse(SQLModel):
+    customer_id: str
+    username: str
+    email: str
+    first_name: str
+    last_name: str
+    address: str
+    ic_no: str
+    phone_no: str
+    age: int
 
 class GenericResponse(SQLModel):
     status: str
@@ -102,11 +106,3 @@ class ListResponse(SQLModel):
     details: list
     metadata: dict = {} 
 
-class UserDetailsResponse(SQLModel):
-    user_id: int
-    username: str
-    full_name: str
-    name: str
-    age: int
-    address: str
-    email: str
