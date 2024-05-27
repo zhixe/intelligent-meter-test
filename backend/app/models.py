@@ -74,16 +74,6 @@ class RegisterCustomerForm:
         self.phone_no = phone_no
         self.age = age
 
-
-class UserUpdateRequest(SQLModel):
-    username: str | None = None
-    full_name: str | None = None
-    name: str | None = None
-    age: int | None = None
-    address: str | None = None
-    email: str | None = None
-
-
 ### Response schemas
 
 class EmployeeDetailsResponse(SQLModel):
@@ -116,11 +106,3 @@ class ListResponse(SQLModel):
     details: list
     metadata: dict = {} 
 
-class UserDetailsResponse(SQLModel):
-    user_id: int
-    username: str
-    full_name: str
-    name: str
-    age: int
-    address: str
-    email: str
