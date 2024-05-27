@@ -1,90 +1,91 @@
-CREATE TABLE "Login_credentials" (
-    "username" VARCHAR(20),
-    "password" VARCHAR(50) NOT NULL,
-    "login_attempt" SMALLINT,
-    "last_login" TIMESTAMP,
-    PRIMARY KEY ("username")
-);
+CREATE FUNCTION generate_tracking_id(t text, id bigint)
+returns text
+as
+$$
+  SELECT t || TO_CHAR(id,'FM000000000');
+$$
+language sql
+immutable;
 
-CREATE TABLE "Employees" (
-    "employee_id" VARCHAR(20),
-    "username" VARCHAR(20) UNIQUE,
-    "employee_email" VARCHAR(50) UNIQUE,
-    "first_name" VARCHAR(100) NOT NULL,
-    "last_name" VARCHAR(100),
-    "department" VARCHAR(20),
-    "position" VARCHAR(20),
-    "employment_type" VARCHAR(20) NOT NULL,
-    PRIMARY KEY ("employee_id"),
-    CONSTRAINT "FK_Employees.username"
-        FOREIGN KEY ("username")
-        REFERENCES "Login_credentials"("username")
+CREATE SEQUENCE event_seq;
+
+CREATE TABLE "employees" (
+    "employee_id" text,
+    "username" text UNIQUE,
+    "password" text NOT NULL,
+    "email" text UNIQUE,
+    "first_name" text NOT NULL,
+    "last_name" text,
+    "department" text,
+    "position" text,
+    "employment_type" text NOT NULL,
+    PRIMARY KEY ("employee_id")
 );
 
 CREATE TABLE "meters" (
-    "meter_serial" TEXT,
-    "meter_manufacturer" VARCHAR(50) NOT NULL,
-    "store_region" VARCHAR(50) NOT NULL,
-    "meter_size" SMALLINT,
-    "meter_type" VARCHAR(50),
-    "meter_model" VARCHAR(50),
+    "meter_serial" text,
+    "manufacturer" text NOT NULL,
+    "store_region" text NOT NULL,
+    "size" smallint,
+    "type" text,
+    "model" text,
     PRIMARY KEY ("meter_serial")
 );
 
-CREATE TABLE "Tracking" (
-    "tracking_id" VARCHAR(20),
-    "user_id" VARCHAR(20),
-    "meter_serial" VARCHAR(20),
-    "source" VARCHAR(20),
-    "destination_address" VARCHAR(20) NOT NULL,
-    "status" bool,
-    PRIMARY KEY ("tracking_id"),
-    CONSTRAINT "FK_Tracking.meter_serial"
+CREATE TABLE "tracking" (
+    "event_id" bigint NOT NULL DEFAULT NEXTVAL ('event_seq'),
+    "employee_id" text,
+    "meter_serial" text,
+    "event_type" char(3) NOT NULL,
+    "tracking_id" text GENERATED ALWAYS AS (generate_tracking_id(event_type, event_id)) STORED,
+    "timestamp" timestamp,
+    "source" text,
+    "destination" text,
+    "status" text,
+    PRIMARY KEY ("event_id"),
+    CONSTRAINT "FK_tracking.meter_serial"
         FOREIGN KEY ("meter_serial")
-        REFERENCES "Meters"("meter_serial"),
-    CONSTRAINT "FK_Tracking.user_id"
-        FOREIGN KEY ("user_id")
-        REFERENCES "Employees"("employee_id")
+        REFERENCES "meters"("meter_serial"),
+    CONSTRAINT "FK_tracking.employee_id"
+        FOREIGN KEY ("employee_id")
+        REFERENCES "employees"("employee_id")
 );
 
-CREATE TABLE "Customers" (
-    "customer_id" VARCHAR(20),
-    "meter_serial" VARCHAR(20),
-    "username" VARCHAR(20) UNIQUE,
-    "customer_email" VARCHAR(50) UNIQUE,
-    "first_name" VARCHAR(100) NOT NULL,
-    "last_name" VARCHAR(100),
-    "address" VARCHAR(300),
-    "ic_no" CHAR(12) UNIQUE,
-    "phone_no" VARCHAR(20),
-    "age" SMALLINT,
-    PRIMARY KEY ("customer_id"),
-    CONSTRAINT "FK_Customers.meter_serial"
-        FOREIGN KEY ("meter_serial")
-        REFERENCES "Meters"("meter_serial"),
-    CONSTRAINT "FK_Customers.username"
-        FOREIGN KEY ("username")
-        REFERENCES "Login_credentials"("username")
+CREATE TABLE "customers" (
+    "customer_id" text,
+    "username" text UNIQUE,
+    "password" text,
+    "email" text UNIQUE,
+    "first_name" text NOT NULL,
+    "last_name" text,
+    "address" text,
+    "ic_no" text UNIQUE,
+    "phone_no" text,
+    "age" smallint,
+    PRIMARY KEY ("customer_id")
 );
 
-CREATE TABLE "Installations" (
-    "installations_id" VARCHAR(20),
-    "customer_id" VARCHAR(20),
-    "meter_serial" VARCHAR(20),
-    "user_id" VARCHAR(20),
-    "installation_date" DATE,
+CREATE TABLE "installations" (
+    "installation_id" text,
+    "meter_serial" text,
+    "customer_id" text,
+    "employee_id" text,
+    "installation_date" timestamp,
     "status" bool,
-    PRIMARY KEY ("installations_id"),
-    CONSTRAINT "FK_Installations.user_id"
-        FOREIGN KEY ("user_id")
-        REFERENCES "Employees"("employee_id"),
-    CONSTRAINT "FK_Installations.meter_serial"
-        FOREIGN KEY ("meter_serial")
-        REFERENCES "Meters"("meter_serial"),
-    CONSTRAINT "FK_Installations.customer_id"
+    PRIMARY KEY ("installation_id"),
+    CONSTRAINT "FK_installations.employee_id"
+        FOREIGN KEY ("employee_id")
+        REFERENCES "employees"("employee_id"),
+    CONSTRAINT "FK_installations.customer_id"
         FOREIGN KEY ("customer_id")
-        REFERENCES "Customers"("customer_id")
+        REFERENCES "customers"("customer_id"),
+    CONSTRAINT "FK_installations.meter_serial"
+        FOREIGN KEY ("meter_serial")
+        REFERENCES "meters"("meter_serial")
 );
 
-
-
+--for testing
+/*
+INSERT INTO tracking (event_type) VALUES ('TRA');
+INSERT INTO tracking (event_type) VALUES ('INS');
+*/
