@@ -1,8 +1,2 @@
 # Don't ignore this file
 !.gitignore
-
-# Python cache
-__pycache__*
-
-# Any Jupyter notebooks
-*.ipynb
